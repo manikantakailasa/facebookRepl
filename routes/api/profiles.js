@@ -141,4 +141,115 @@ router.delete('/', auth, async (req, res) => {
     }
 })
 
+router.put('/experience', [auth, [
+    check('title', 'title is required').notEmpty(),
+    check('company', 'company is required').notEmpty(),
+    check('from','from date is required')
+]], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    } = req.body;
+
+    const newExp = {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    }
+
+    try {
+
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        profile.experience.unshift(newExp);
+
+        await profile.save();
+
+        res.json(profile)
+        
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).send('server error');
+    }
+})
+
+router.delete('/experience/:expid',auth, async (req, res) => {
+    try {
+        const profile= await Profile.findOne({ user: req.user.id });
+
+        const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.expid);
+
+        profile.experience.splice(removeIndex, 1);
+
+        await profile.save();
+        res.json(profile);
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('server error')
+    }
+})
+
+router.put('/education', [auth, [
+    check('school', 'school is require').notEmpty(),
+    check('degree', 'degree is required').notEmpty(),
+    check('from', 'from is required').notEmpty(),
+    check('fieldofstyudy','field of study is required').notEmpty()
+]], async (req, res) => {
+
+        const {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    } = req.body;
+
+    const education = {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    }
+
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    profile.education.unshift(education);
+    await profile.save();
+
+    res.json(profile)
+
+})
+
+router.delete('/education/:edu_id', auth, async (req, res) => {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    const removeindex = profile.education.map(item => item.id).indexOf(req.params.edu_id);
+
+    profile.education.splice(removeindex, 1);
+    await profile.save();
+
+    res.json(profile);
+})
+
+
 module.exports = router;
