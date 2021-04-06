@@ -8,7 +8,7 @@ const profilesSchema = new mongooes.Schema({
     company: {
         type: String
     },
-    wesite: {
+    website: {
         type: String
     },
     location: {
@@ -25,7 +25,7 @@ const profilesSchema = new mongooes.Schema({
     bio: {
         type: String
     },
-    githusername: {
+    githubusername: {
         type: String
     },
     experience: [{
