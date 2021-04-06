@@ -118,12 +118,26 @@ router.get('/:user_id', async (req, res) => {
         }
         res.send(profile)
     } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
         if (err.kind == 'ObjectId')
         {
             return res.status(400).json({ msg: 'user profile not found' });
         }
         return res.status(500).send('server error');        
+    }
+})
+
+router.delete('/', auth, async (req, res) => {
+    try {
+
+        await Profile.findOneAndRemove({ user: req.user.id });
+        await User.findOneAndRemove({ _id: req.user.is });
+
+        res.send({ msg: 'user delted' });
+        
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).send('server error');
     }
 })
 
