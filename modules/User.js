@@ -5,7 +5,7 @@ const userSchmea = mongooes.Schema({
         type: String,
         require: true
     },
-    mail: {
+    email: {
         type: String,
         require: true,
         unique: true
