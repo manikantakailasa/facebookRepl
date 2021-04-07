@@ -1,4 +1,6 @@
 {
     "mongoURI" : "mongodb+srv://mani1234:mani1234@clustor-devconectore.mtvdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    "jwtsecret"  : "myscrete"
+    "jwtsecret"  : "myscrete",
+    "githubclientid":"ffa667976a2476a240dc",
+    "githubsecret":"124edc103d1b0e8ae291dbfd87a798839963b612"
 }

@@ -1,4 +1,6 @@
 const express = require('express');
+const config = require('config');
+const request = require('request');
 const User = require('../../modules/User');
 const Profile = require('../../modules/Profiles');
 const router = express.Router();
@@ -249,6 +251,35 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     await profile.save();
 
     res.json(profile);
+})
+
+router.get('/github/:profileid', (req, res) => {
+    try {
+        
+        const options = {
+            uri: `http://api.github.com/users/${req.params.profileid}/repos?per_page=5&sort=created:asc&client_id=
+            ${config.get('githubclientid')}&client_secret=${'githubsecret'}`,
+            method: 'GET',
+            headers:{'user-agent':'node.js'}
+        }
+
+        request(options, (error, response, body) => {
+            if (error) {
+                console.errors(errors);
+            }
+
+            if (response.statusCode !== 200) {
+                return res.status(404).json({ msg: 'github profile not found'})
+            }
+
+            res.json(JSON.parse(body));
+        })
+
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('server error')
+    }
 })
 
 
