@@ -8,6 +8,7 @@ const auth = require('../../middleware/auth');
 const { check, validationResults, validationResult } = require('express-validator/check');
 const { route } = require('./users');
 
+// fetching current user login profile
 router.get('/me', auth, async (req, res) => {
 
     try {
@@ -26,6 +27,8 @@ router.get('/me', auth, async (req, res) => {
     
 });
 
+
+//register profile
 router.post('/', [auth, [
     check('status', 'status is required').not().isEmpty(),
     check('skills','skills is required').notEmpty()
@@ -98,7 +101,7 @@ router.post('/', [auth, [
     
 })
 
-
+//get all profiles
 router.get('/', async (req, res) => {
     try {
         const profiles = await Profile.find().populate('user',['name','avatar','password']);
@@ -110,6 +113,8 @@ router.get('/', async (req, res) => {
     }
 })
 
+
+// get specific profile
 router.get('/:user_id', async (req, res) => {
     try {
 
@@ -129,6 +134,8 @@ router.get('/:user_id', async (req, res) => {
     }
 })
 
+
+//delete profile loged in profile
 router.delete('/', auth, async (req, res) => {
     try {
 
@@ -143,6 +150,7 @@ router.delete('/', auth, async (req, res) => {
     }
 })
 
+//update expertience of loged in user
 router.put('/experience', [auth, [
     check('title', 'title is required').notEmpty(),
     check('company', 'company is required').notEmpty(),
@@ -189,6 +197,7 @@ router.put('/experience', [auth, [
     }
 })
 
+//update experience by id
 router.delete('/experience/:expid',auth, async (req, res) => {
     try {
         const profile= await Profile.findOne({ user: req.user.id });
@@ -206,6 +215,7 @@ router.delete('/experience/:expid',auth, async (req, res) => {
     }
 })
 
+//update education
 router.put('/education', [auth, [
     check('school', 'school is require').notEmpty(),
     check('degree', 'degree is required').notEmpty(),
@@ -242,6 +252,7 @@ router.put('/education', [auth, [
 
 })
 
+//delete education by id 
 router.delete('/education/:edu_id', auth, async (req, res) => {
     const profile = await Profile.findOne({ user: req.user.id });
 
@@ -253,6 +264,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     res.json(profile);
 })
 
+//get repos of github by profile
 router.get('/github/:profileid', (req, res) => {
     try {
         

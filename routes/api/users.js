@@ -11,6 +11,8 @@ const router = express.Router();
 
 //router.get('/', (req, res) => res.send("api users"));
 
+//register user in DB
+
 router.post('/', [
     check('name', 'Name is required').notEmpty(),
     check('email', 'please include a valid email').isEmail(),

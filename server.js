@@ -16,6 +16,7 @@ app.use('/api/profile', require('./routes/api/profiles'));
 app.use('/api/posts', require('./routes/api/posts'));
 
 
-app.get('/',(req,res) =>  res.send('api listining'))
+app.get('/', (req, res) => res.send('api listining'))
+
 
 app.listen(PORT , () =>  console.log(`server started listing on port ${PORT}`))
