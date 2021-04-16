@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('config');
 const request = require('request');
 const User = require('../../modules/User');
+const Post = require('../../modules/Post');
 const Profile = require('../../modules/Profiles');
 const router = express.Router();
 const auth = require('../../middleware/auth');
@@ -138,7 +139,7 @@ router.get('/:user_id', async (req, res) => {
 //delete profile loged in profile
 router.delete('/', auth, async (req, res) => {
     try {
-
+        await Post.deleteMany({ user: req.user.id });
         await Profile.findOneAndRemove({ user: req.user.id });
         await User.findOneAndRemove({ _id: req.user.is });
 
@@ -220,8 +221,13 @@ router.put('/education', [auth, [
     check('school', 'school is require').notEmpty(),
     check('degree', 'degree is required').notEmpty(),
     check('from', 'from is required').notEmpty(),
-    check('fieldofstyudy','field of study is required').notEmpty()
+    check('fieldofstudy','field of study is required').notEmpty()
 ]], async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
         const {
         school,

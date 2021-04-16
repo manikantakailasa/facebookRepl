@@ -1,8 +1,13 @@
 import React from 'react';
 import { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
+import { Link }  from 'react-router-dom'
 
 
-const Register = () => {
+const Register = ({setAlert, register,isAuth}) => {
 
     const [formData, setfromData] = useState({
         name: '',
@@ -16,13 +21,18 @@ const Register = () => {
     const onSubmit = e => {
         e.preventDefault();
         if (password !== password2) {
-            console.log('do not match');
+            setAlert('password does not match','danger');
         } else {
-            console.log(formData);
+            register({ name, email, password });
         }
     }
 
     const { name, email, password, password2 } = formData;
+
+    if (isAuth) {
+        return <Redirect to="/dashboard" />
+    }
+
     return (
         <Fragment>
             <section className="container">
@@ -33,10 +43,10 @@ const Register = () => {
                         <input type="text" placeholder="Name" name="name"
                             value={name}
                             onChange={e => onChange(e)}
-                            required />
+                             />
                     </div>
                     <div className="form-group">
-                        <input type="email" placeholder="Email Address" name="email" required
+                        <input type="email" placeholder="Email Address" name="email" 
                             value={email}
                             onChange={e => onChange(e)} />
                         <small className="form-text"
@@ -51,7 +61,7 @@ const Register = () => {
                             name="password"
                             value={password}
                             onChange={e => onChange(e)}
-                            minLength="6"
+                  
                         />
                     </div>
                     <div className="form-group">
@@ -61,13 +71,13 @@ const Register = () => {
                             name="password2"
                             value={password2}
                             onChange={e => onChange(e)}
-                            minLength="6"
+                        
                         />
                     </div>
                     <input type="submit" className="btn btn-primary" value="Register" />
                 </form>
                 <p className="my-1">
-                    Already have an account? <a href="login.html">Sign In</a>
+                    Already have an account? <Link to="/login">Sign In</Link>
                 </p>
             </section>
         </Fragment>
@@ -75,4 +85,8 @@ const Register = () => {
     );
 }
 
-export default Register;
+const mapStateToProps = state => ({
+    isAuth : state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps, { setAlert , register})(Register);

@@ -42,14 +42,14 @@ router.post('/', [
     
         const user = await User.findOne({ email });
 
-    if (!user) {
-        return res.status(400).send({ msg: "Invalid credentials" });
+        if (!user) {
+            return res.status(400).send({ errors: [{ msg: "Invalid credentials" } ]});
     }
 
     const ismatch = await bcrypt.compare(password, user.password);
 
-    if (!ismatch) {
-        return res.status(400).send({ msg: 'invalid credentials' });
+        if (!ismatch) {
+            return res.status(400).send({errors: [{ msg: 'invalid credentials' }]});
     }
 
     const paylod = {
