@@ -6,6 +6,7 @@ const Profile = require('../../modules/Profiles');
 const auth = require('../../middleware/auth');
 const User = require('../../modules/User');
 
+//add post
 //register a post by loged in user
 router.post('/', [auth, [
     check('text', 'text is required').notEmpty()

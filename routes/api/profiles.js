@@ -66,7 +66,7 @@ router.post('/', [auth, [
     if (githubusername) profileFields.githubusername = githubusername;
 
     if (skills) {
-        profileFields.skills = skills.split(',').map(skill => skill.trim());
+        profileFields.skills = skills+''.split(',').map(skill => skill.trim());
     }
 
     profileFields.social = {}
@@ -139,7 +139,7 @@ router.get('/:user_id', async (req, res) => {
 //delete profile loged in profile
 router.delete('/', auth, async (req, res) => {
     try {
-        await Post.deleteMany({ user: req.user.id });
+        await Post.deleteMany({user: req.user.id});
         await Profile.findOneAndRemove({ user: req.user.id });
         await User.findOneAndRemove({ _id: req.user.is });
 
